@@ -1,6 +1,7 @@
 package tetris;
 
 import utils.Utils;
+
 public class Tetris {
 
     public static void main(String[] args) {
@@ -23,19 +24,33 @@ public class Tetris {
                 columna = Utils.LlegirInt("El tamany mínim del tauler ha de ser de 4x8, torna a introduir les columnes: ");
             }
         }
-        int[][] tauler = new int[fila][columna];
-        
-        for(int i = 0; i<fila; i++){
-            for(int j = 0; j<columna; j++){
-                tauler[i][j] = 0;
-            }
-        }
-        for(int i = 0; i<fila; i++){
-            for(int j = 0; j<columna; j++){
-                System.out.print(tauler[i][j]);
-            }
-            System.out.println(" ");
-        }
+        boolean[][] tauler = new boolean[fila][columna];
+
     }
-    
+
+    static boolean Mostrarpeca() {
+
+    }
+
+    static boolean MourePecaCostats(boolean tauler[][]) {
+
+    }
+
+    static boolean FerCaureLaPeca(boolean tauler[][]) {
+
+    }
+
+    static void MostrarTaulell(boolean tauler[][]) {
+
+        for (int i = tauler.length - 1; i >= 0; --i) {
+            for (int j = 0; j < tauler[0].length; ++j) {
+                if (tauler[i][j]) {
+                    System.out.print("X");
+                }
+            }
+        }
+        
+
+    }
+
 }
