@@ -2,13 +2,40 @@ package tetris;
 
 import utils.Utils;
 
-public class Tetris {
 
+public class Tetris {
+    
     private static boolean[][] tauler;
     
-    private static peca pecaactual;
 
-     
+    private boolean[][][] peces = {
+        {
+            {false, true, false},
+            {false, true, false},
+            {false, true, false},
+            {false, true, false}
+        },
+        {
+            {false, false, false},
+            {true, false, false},
+            {true, true, true}
+        },
+        {
+            {true, true},
+            {true, true},},
+        {
+            {false, true, false},
+            {false, true, false},
+            {true, true, true}
+        },
+        {
+            {false, true, false},
+            {false, true, false},
+            {true, true, true}
+        },};
+
+    
+    
 
     public static void main(String[] args) {
         //Demanem la mida del tauler en files i columnes, el mínim del tauler serà de 8x4 
@@ -32,27 +59,31 @@ public class Tetris {
         }
         /*Li afegim +4 a la fila perque aquest serà l'espai on es mostaran les peces*/
         tauler = new boolean[fila + 4][columna];
-        
+
         boolean jugant = comprobarfinal();
-        
 
         while (jugant) {
-            
-            pecaactual = new peca();
-
+           Peca pecaactual = new peca();
             Mostrarpeca();
-
+            MostrarTaulell(tauler, fila, columna);
             Mourepeca();
-
             FerCaureLaPeca();
-
             MostrarTaulell(tauler, fila, columna);
         }
 
     }
 
-    public static void Mostrarpeca() {
-
+    public static void Mostrarpeca(boolean tauler[][], int fila, int columna) {
+        for (int i = 0; i < fila; i++) {
+            for (int j = 0; j < columna; j++) {
+                if (tauler[i][j]) {
+                    System.out.print("X ");
+                } else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
     }
 
     public static void MourePeca(boolean tauler[][]) {
@@ -67,7 +98,25 @@ public class Tetris {
 
     }
 
-    public static void FerCaureLaPeca(boolean tauler[][]) {
+    public static void FerCaureLaPeca() {
+        // Obtiene las posiciones actuales de la pieza
+        int[][] posicions = pecaactual.getPosicions();
+        // Recorre las posiciones de la pieza
+        for (int i = 0; i < posicions.length; i++) {
+            int fila = posicions[i][0];
+            int columna = posicions[i][1];
+            // Si la posición de abajo está ocupada o es el final del tablero
+            if (fila == tauler.length - 1 || tauler[fila + 1][columna]) {
+                // Marca las posiciones de la pieza como ocupadas en el tablero
+                for (int j = 0; j < posicions.length; j++) {
+                    int filaPeca = posicions[j][0];
+                    int columnaPeca = posicions[j][1];
+                    tauler[filaPeca][columnaPeca] = true;
+                }
+            }
+        }
+        // Hace caer la pieza una posición
+        pecaactual.moveDown();
 
     }
 
@@ -85,18 +134,17 @@ public class Tetris {
         }
 
     }
-    
-    public static boolean comprobarfinal(){
+
+    public static boolean comprobarfinal() {
         boolean gameover = false;
-        
-        for(int i = 0; i<tauler[0].length; i++){
-            if(tauler[0][i]){
+
+        for (int i = 0; i < tauler[0].length; i++) {
+            if (tauler[0][i]) {
                 gameover = true;
             }
         }
         return gameover;
-       
+
     }
-    
-    
+
 }
