@@ -34,7 +34,6 @@ public class Tetris {
         boolean jugant = comprobarfinal();
 
         while (jugant) {
-            pecaActual = new peca();
             Mostrarpeca(tauler, fila, columna);
             MostrarTaulell(tauler, fila, columna);
             Mourepeca(tauler);
@@ -57,7 +56,8 @@ public class Tetris {
     }
 
     public static void Mostrarpeca(int tauler[][], int fila, int columna) {
-        
+        pecaActual = new peca();
+
     }
 
     public static void MourePeca(int tauler[][]) {
@@ -111,7 +111,7 @@ public class Tetris {
             // Recorre las posiciones de la fila
             for (int columna = 0; columna < tauler[fila].length; columna++) {
                 // Si encuentra una posición vacía, la línea no esta completa
-                if (tauler[fila][columna]==1) {
+                if (tauler[fila][columna] == 1) {
                     lineaCompleta = false;
                     break;
                 }
