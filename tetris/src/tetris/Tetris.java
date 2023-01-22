@@ -6,7 +6,7 @@ import java.util.Random;
 public class Tetris {
 
     private static boolean[][] tauler;
-    private static peca pecaActual;
+    private static pecaActual pecaActual;
 
     public static void main(String[] args) {
         //Demanem la mida del tauler en files i columnes, el mínim del tauler serà de 8x4 
@@ -123,7 +123,7 @@ public class Tetris {
         private boolean[][] posicions;
         private int tipus;
 
-        public peca() {
+        public pecaActual() {
             Random rand = new Random();
             tipus = rand.nextInt(4)+1;
 
