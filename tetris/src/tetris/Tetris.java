@@ -1,41 +1,12 @@
 package tetris;
 
 import utils.Utils;
-
+import java.util.Random;
 
 public class Tetris {
-    
+
     private static boolean[][] tauler;
-    
-
-    private boolean[][][] peces = {
-        {
-            {false, true, false},
-            {false, true, false},
-            {false, true, false},
-            {false, true, false}
-        },
-        {
-            {false, false, false},
-            {true, false, false},
-            {true, true, true}
-        },
-        {
-            {true, true},
-            {true, true},},
-        {
-            {false, true, false},
-            {false, true, false},
-            {true, true, true}
-        },
-        {
-            {false, true, false},
-            {false, true, false},
-            {true, true, true}
-        },};
-
-    
-    
+    private static peca pecaActual;
 
     public static void main(String[] args) {
         //Demanem la mida del tauler en files i columnes, el mínim del tauler serà de 8x4 
@@ -62,14 +33,26 @@ public class Tetris {
 
         boolean jugant = comprobarfinal();
 
-        while (jugant) {
-           Peca pecaactual = new peca();
-            Mostrarpeca();
+        while (!jugant) {
+            pecaactual = new peca();
+            Mostrarpeca(tauler, fila, columna);
             MostrarTaulell(tauler, fila, columna);
-            Mourepeca();
-            FerCaureLaPeca();
+            Mourepeca(tauler);
+            FerCaureLaPeca(tauler);
             MostrarTaulell(tauler, fila, columna);
         }
+
+    }
+
+    public static boolean comprobarfinal() {
+        boolean jugant = true;
+
+        for (int i = 0; i < tauler[0].length; i++) {
+            if (tauler[0][i]) {
+                jugant = false;
+            }
+        }
+        return jugant;
 
     }
 
@@ -86,19 +69,19 @@ public class Tetris {
         }
     }
 
-    public static void MourePeca(boolean tauler[][]) {
+    static void MourePeca(boolean tauler[][]) {
 
         int direccio = Utils.LlegirInt("Introduce la dirección a mover la pieza (1/0): ");
 
         if (direccio == 1) {
-            pecaactual.moveLeft();
+            pecaActual.moveLeft();
         } else if (direccio == 0) {
-            pecaactual.moveRight();
+            pecaActual.moveRight();
         }
 
     }
 
-    public static void FerCaureLaPeca() {
+    static void FerCaureLaPeca() {
         // Obtiene las posiciones actuales de la pieza
         int[][] posicions = pecaactual.getPosicions();
         // Recorre las posiciones de la pieza
@@ -135,16 +118,55 @@ public class Tetris {
 
     }
 
-    public static boolean comprobarfinal() {
-        boolean gameover = false;
+    public class Peca {
 
-        for (int i = 0; i < tauler[0].length; i++) {
-            if (tauler[0][i]) {
-                gameover = true;
+        private boolean[][] posicions;
+        private int tipus;
+
+        public peca() {
+            Random rand = new Random();
+            tipus = rand.nextInt(4)+1;
+
+            switch (tipus) {
+                case 0: {//Pieza I
+                    posicions = new boolean[][]{
+                        {false, true, false},
+                        {false, true, false},
+                        {false, true, false},
+                        {false, true, false}
+                    };
+                }
+                case 1: {//Pieza T
+                    posicions = new boolean[][]{
+                        {false, false, false},
+                        {true, true, true},
+                        {false, true, false}
+                    };
+                }
+                case 2: {//Pieza cuadrado
+                    posicions = new boolean[][]{
+                        {true, true},
+                        {true, true},};
+                }
+                case 3:{//Pieza L
+                    posicions = new boolean[][]{                        
+                        {false, true, false},
+                        {false, true, false},
+                        {false, true, true}
+                    };        
+                }
+                case 4:{//Pieza L tumbada
+                    posicions = new boolean[][]{                        
+                        {false, false, false},
+                        {true, true, true},
+                        {false, false, true}
+                    };        
+                }
+
             }
         }
-        return gameover;
-
     }
 
 }
+
+
