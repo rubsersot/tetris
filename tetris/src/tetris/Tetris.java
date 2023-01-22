@@ -34,7 +34,7 @@ public class Tetris {
         boolean jugant = comprobarfinal();
 
         while (!jugant) {
-            pecaactual = new peca();
+            Peca = new peca();
             Mostrarpeca(tauler, fila, columna);
             MostrarTaulell(tauler, fila, columna);
             Mourepeca(tauler);
@@ -81,7 +81,7 @@ public class Tetris {
 
     }
 
-    static void FerCaureLaPeca() {
+    static void FerCaureLaPeca(boolean tauler[][]) {
         // Obtiene las posiciones actuales de la pieza
         int[][] posicions = pecaactual.getPosicions();
         // Recorre las posiciones de la pieza
