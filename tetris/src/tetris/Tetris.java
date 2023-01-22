@@ -34,6 +34,7 @@ public class Tetris {
         boolean jugant = comprobarfinal();
 
         while (jugant) {
+           
             Mostrarpeca(tauler, fila, columna);
             MostrarTaulell(tauler, fila, columna);
             Mourepeca(tauler);
@@ -56,8 +57,7 @@ public class Tetris {
     }
 
     public static void Mostrarpeca(int tauler[][], int fila, int columna) {
-        pecaActual = new peca();
-
+         pecaActual = new peca();
     }
 
     public static void MourePeca(int tauler[][]) {
@@ -65,9 +65,9 @@ public class Tetris {
         int direccion = Utils.LlegirInt("Introduce la dirección a mover la pieza (1/0): ");
 
         if (direccion == 1) {
-            pecaActual.moveLeft();
+            pecaActual.moureDreta(tauler);
         } else if (direccion == 0) {
-            pecaActual.moveRight();
+            pecaActual.moureEsquerra(tauler);
         }
 
     }
@@ -84,7 +84,7 @@ public class Tetris {
                 int fila = posicions[i][0];
                 int columna = posicions[i][1];
                 // Si la posición de abajo está vacía
-                if (fila < tauler.length - 1 && !tauler[fila + 1][columna]) {
+                if (fila < tauler.length - 1 && tauler[fila + 1][columna] == 0) {
                     // Actualiza la posición de la pieza para que caiga
                     posicions[i][0]++;
                     piezaEnMovimiento = true;
@@ -97,10 +97,11 @@ public class Tetris {
                     int fila = posicions[i][0];
                     int columna = posicions[i][1];
                     // Marca las posiciones de la pieza como ocupadas en el tablero
-                    tauler[fila][columna] = true;
+                    tauler[fila][columna] = 1;
                 }
                 // Comprueba si se ha formado una línea completa
                 comprobarLineaCompleta(tauler);
+
             }
         }
     }
@@ -140,6 +141,7 @@ public class Tetris {
                 System.out.print(tauler[i][j] + " ");
             }
             System.out.println(" ");
+
         }
 
     }
@@ -194,7 +196,7 @@ public class Tetris {
             }
         }
 
-        public void moveLeft(int[][] tauler) {
+        public void moureEsquerra(int[][] tauler) {
             // recorre las posiciones de la pieza
             for (int i = 0; i < posicions.length; i++) {
                 // obtiene las coordenadas de la posición actual
@@ -207,7 +209,7 @@ public class Tetris {
             }
         }
 
-        public void moveRight(int[][] tauler) {
+        public void moureDreta(int[][] tauler) {
             // recorre las posiciones de la pieza
             for (int i = 0; i < posicions.length; i++) {
                 // obtiene las coordenadas de la posición actual
