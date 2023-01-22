@@ -6,7 +6,7 @@ import java.util.Random;
 public class Tetris {
 
     private static boolean[][] tauler;
-    private static pecaActual pecaActual;
+    private static peca pecaActual;
 
     public static void main(String[] args) {
         //Demanem la mida del tauler en files i columnes, el mínim del tauler serà de 8x4 
@@ -33,7 +33,7 @@ public class Tetris {
 
         boolean jugant = comprobarfinal();
 
-        while (!jugant) {
+        while (jugant) {
             pecaActual = new peca();
             Mostrarpeca(tauler, fila, columna);
             MostrarTaulell(tauler, fila, columna);
@@ -69,41 +69,80 @@ public class Tetris {
         }
     }
 
-    static void MourePeca(boolean tauler[][]) {
+    public static void MourePeca(boolean tauler[][]) {
 
-        int direccio = Utils.LlegirInt("Introduce la dirección a mover la pieza (1/0): ");
+        int direccion = Utils.LlegirInt("Introduce la dirección a mover la pieza (1/0): ");
 
-        if (direccio == 1) {
+        if (direccion == 1) {
             pecaActual.moveLeft();
-        } else if (direccio == 0) {
+        } else if (direccion == 0) {
             pecaActual.moveRight();
         }
 
     }
 
-    static void FerCaureLaPeca(boolean tauler[][]) {
+    public static void FerCaureLaPeca(boolean tauler[][]) {
         // Obtiene las posiciones actuales de la pieza
         int[][] posicions = pecaActual.getPosicions();
-        // Recorre las posiciones de la pieza
-        for (int i = 0; i < posicions.length; i++) {
-            int fila = posicions[i][0];
-            int columna = posicions[i][1];
-            // Si la posición de abajo está ocupada o es el final del tablero
-            if (fila == tauler.length - 1 || tauler[fila + 1][columna]) {
-                // Marca las posiciones de la pieza como ocupadas en el tablero
-                for (int j = 0; j < posicions.length; j++) {
-                    int filaPeca = posicions[j][0];
-                    int columnaPeca = posicions[j][1];
-                    tauler[filaPeca][columnaPeca] = true;
+        boolean piezaEnMovimiento = true;
+        // Mientras la pieza esté en movimiento
+        while (piezaEnMovimiento) {
+            piezaEnMovimiento = false;
+            // Recorre las posiciones de la pieza
+            for (int i = 0; i < posicions.length; i++) {
+                int fila = posicions[i][0];
+                int columna = posicions[i][1];
+                // Si la posición de abajo está vacía
+                if (fila < tauler.length - 1 && !tauler[fila + 1][columna]) {
+                    // Actualiza la posición de la pieza para que caiga
+                    posicions[i][0]++;
+                    piezaEnMovimiento = true;
+                }
+            }
+            // Si la pieza no está en movimiento, significa que ha llegado al fondo
+            if (!piezaEnMovimiento) {
+                // Recorre las posiciones de la pieza
+                for (int i = 0; i < posicions.length; i++) {
+                    int fila = posicions[i][0];
+                    int columna = posicions[i][1];
+                    // Marca las posiciones de la pieza como ocupadas en el tablero
+                    tauler[fila][columna] = true;
+                }
+                // Comprueba si se ha formado una línea completa
+                comprobarLineaCompleta(tauler);
+            }
+        }
+    }
+
+    public static void comprobarLineaCompleta(boolean tauler[][]) {
+        for (int fila = 0; fila < tauler.length; fila++) {
+            boolean lineaCompleta = true;
+            // Recorre las posiciones de la fila
+            for (int columna = 0; columna < tauler[fila].length; columna++) {
+                // Si encuentra una posición vacía, la línea no esta completa
+                if (!tauler[fila][columna]) {
+                    lineaCompleta = false;
+                    break;
+                }
+            }
+            // Si la línea está completa
+            if (lineaCompleta) {
+                // Recorre las filas desde la fila completa hasta el final
+                for (int i = fila; i > 0; i--) {
+                    // Mueve las filas una posición hacia abajo
+                    for (int j = 0; j < tauler[i].length; j++) {
+                        tauler[i][j] = tauler[i - 1][j];
+                    }
+                }
+                // Reinicia la primera fila
+                for (int j = 0; j < tauler[0].length; j++) {
+                    tauler[0][j] = false;
                 }
             }
         }
-        // Hace caer la pieza una posición
-        pecaActual.moveDown();
-
     }
 
-    static void MostrarTaulell(boolean tauler[][], int fila, int columna) {
+    public static void MostrarTaulell(boolean tauler[][], int fila, int columna) {
 
         for (int i = 0; i < fila; i++) {
             for (int j = 0; j < columna; j++) {
@@ -118,55 +157,87 @@ public class Tetris {
 
     }
 
-    public class pecaActual {
+    public class peca {
 
         private boolean[][] posicions;
         private int tipus;
 
-        public pecaActual() {
+        public peca() {
             Random rand = new Random();
-            tipus = rand.nextInt(4)+1;
-
+            tipus = rand.nextInt(4) + 1;
             switch (tipus) {
-                case 0: {//Pieza I
+                case 1: {//Pieza I
                     posicions = new boolean[][]{
                         {false, true, false},
                         {false, true, false},
                         {false, true, false},
                         {false, true, false}
                     };
+                    break;
                 }
-                case 1: {//Pieza T
+                case 2: {//Pieza T
                     posicions = new boolean[][]{
                         {false, false, false},
                         {true, true, true},
                         {false, true, false}
                     };
+                    break;
                 }
-                case 2: {//Pieza cuadrado
+                case 3: {//Pieza cuadrado
                     posicions = new boolean[][]{
                         {true, true},
                         {true, true},};
+                    break;
                 }
-                case 3:{//Pieza L
-                    posicions = new boolean[][]{                        
+                case 4: {//Pieza L
+                    posicions = new boolean[][]{
                         {false, true, false},
                         {false, true, false},
                         {false, true, true}
-                    };        
+                    };
+                    break;
                 }
-                case 4:{//Pieza L tumbada
-                    posicions = new boolean[][]{                        
+                case 5: {//Pieza L tumbada
+                    posicions = new boolean[][]{
                         {false, false, false},
                         {true, true, true},
                         {false, false, true}
-                    };        
+                    };
+                    break;
                 }
-
             }
         }
+
+        public void moveLeft(boolean[][] tauler) {
+            // recorre las posiciones de la pieza
+            for (int i = 0; i < posicions.length; i++) {
+                // obtiene las coordenadas de la posición actual
+                int fila = posicions[i][0];
+                int columna = posicions[i][1];
+                // si la posición a la izquierda está vacía, se mueve la posición actual hacia la izquierda
+                if (columna > 0 && !tauler[fila][columna - 1]) {
+                    posicions[i][1]--;
+                }
+            }
+        }
+
+        public void moveRight(boolean[][] tauler) {
+            // recorre las posiciones de la pieza
+            for (int i = 0; i < posicions.length; i++) {
+                // obtiene las coordenadas de la posición actual
+                int fila = posicions[i][0];
+                int columna = posicions[i][1];
+                // si la posición a la derecha está vacía, se mueve la posición actual hacia la derecha
+                if (columna < tauler[0].length - 1 && !tauler[fila][columna + 1]) {
+                    posicions[i][1]++;
+                }
+            }
+        }
+
+        public boolean[][] getPosicions() {
+            return posicions;
+        }
+
     }
 
 }
-
-
